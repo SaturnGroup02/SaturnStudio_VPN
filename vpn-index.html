@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>土星スタジオVPN - OpenVPN ダウンロード</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    .header h1 {
+      font-size: 48px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .header p {
+      font-size: 18px;
+      color: #b0b0b0;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+    }
+
+    .language-selector {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .lang-btn {
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.5);
+      color: #b0b0b0;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .lang-btn:hover {
+      border-color: #00d4ff;
+      color: #00d4ff;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(123, 47, 247, 0.2));
+      border-color: #00d4ff;
+      color: #00d4ff;
+    }
+
+    .discord-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.2), rgba(114, 137, 218, 0.1));
+      border: 2px solid rgba(88, 101, 242, 0.6);
+      border-radius: 8px;
+      padding: 12px 28px;
+      color: #5865f2;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+      margin-right: 12px;
+    }
+
+    .discord-btn:hover {
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.3), rgba(114, 137, 218, 0.2));
+      border-color: #5865f2;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.3);
+    }
+
+    .discord-icon {
+      font-size: 18px;
+    }
+
+    .help-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(123, 47, 247, 0.2), rgba(0, 212, 255, 0.1));
+      border: 2px solid rgba(123, 47, 247, 0.6);
+      border-radius: 8px;
+      padding: 12px 28px;
+      color: #7b2ff7;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      letter-spacing: 0.5px;
+    }
+
+    .help-btn:hover {
+      background: linear-gradient(135deg, rgba(123, 47, 247, 0.3), rgba(0, 212, 255, 0.2));
+      border-color: #7b2ff7;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(123, 47, 247, 0.3);
+    }
+
+    .region-group {
+      margin-bottom: 50px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .region-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #00d4ff;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+      display: inline-block;
+      min-width: 100%;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(123, 47, 247, 0.1));
+      border: 2px solid rgba(0, 212, 255, 0.5);
+      border-radius: 12px;
+      padding: 24px 20px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+      background-color: transparent;
+    }
+
+    .download-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .download-btn:hover {
+      border-color: #00d4ff;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(123, 47, 247, 0.2));
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0, 212, 255, 0.2);
+    }
+
+    .download-btn:hover::before {
+      left: 100%;
+    }
+
+    .download-btn:active {
+      transform: translateY(-3px);
+    }
+
+    .btn-icon {
+      font-size: 32px;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+    }
+
+    .download-btn:hover .btn-icon {
+      transform: scale(1.15) rotate(-10deg);
+      opacity: 1;
+    }
+
+    .btn-label {
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-country {
+      font-size: 13px;
+      color: #00d4ff;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(0, 212, 255, 0.2);
+      color: #707070;
+      font-size: 13px;
+      animation: fadeIn 1s ease-out 0.3s backwards;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 32px;
+      }
+
+      .header p {
+        font-size: 16px;
+      }
+
+      .button-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .download-btn {
+        padding: 18px 16px;
+      }
+
+      .btn-icon {
+        font-size: 24px;
+      }
+
+      .language-selector {
+        position: static;
+        margin-bottom: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .discord-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+
+      .help-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 20px 12px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .header {
+        margin-bottom: 40px;
+      }
+
+      .button-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="language-selector">
+      <button class="lang-btn active" onclick="switchLanguage('ja')">日本語</button>
+      <button class="lang-btn" onclick="switchLanguage('vi')">Tiếng Việt</button>
+      <button class="lang-btn" onclick="switchLanguage('en')">English</button>
+    </div>
+
+    <div class="header">
+      <h1>🪐 <span data-ja="サタンVPN" data-vi="Satan VPN" data-en="Satan VPN">サタンVPN</span></h1>
+      <p><span data-ja="コスパ最強VPNサービス" data-vi="Dịch vụ VPN giá rẻ nhất" data-en="The Most Cost-Effective VPN Service">コスパ最強VPNサービス</span></p>
+      <a href="https://discord.gg/ujX793DgjD" class="discord-btn" target="_blank">
+        <span class="discord-icon">💬</span>
+        <span data-ja="公式Discordに参加" data-vi="Tham gia Discord chính thức" data-en="Join Official Discord">公式Discordに参加</span>
+      </a>
+      <a href="https://www.tp-link.com/jp/support/faq/3978/" class="help-btn" target="_blank">
+        <span>❓</span>
+        <span data-ja="使い方説明を見る" data-vi="Xem hướng dẫn sử dụng" data-en="View Setup Guide">使い方説明を見る</span>
+      </a>
+    </div>
+
+    <!-- 日本地域 -->
+    <div class="region-group">
+      <div class="region-title" data-ja="日本" data-vi="Nhật Bản" data-en="Japan">日本</div>
+      <div class="button-grid">
+        <button class="download-btn" onclick="downloadFile('https://raw.githubusercontent.com/SaturnGroup02/SaturnStudio_VPN/main/vpngate_1.21.49.161_udp_4679.ovpn', 'vpngate_tokyo1.ovpn')">
+          <span class="btn-icon">🇯🇵</span>
+          <span class="btn-country" data-ja="東京" data-vi="Tokyo" data-en="Tokyo">東京</span>
+          <span class="btn-label" data-ja="サーバー1" data-vi="Máy chủ 1" data-en="Server 1">サーバー1</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://raw.githubusercontent.com/SaturnGroup02/SaturnStudio_VPN/main/vpngate_124.18.41.171_udp_1355.ovpn', 'vpngate_nagoya1.ovpn')">
+          <span class="btn-icon">🇯🇵</span>
+          <span class="btn-country" data-ja="名古屋" data-vi="Nagoya" data-en="Nagoya">名古屋</span>
+          <span class="btn-label" data-ja="サーバー1" data-vi="Máy chủ 1" data-en="Server 1">サーバー1</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_210.134.203.207_udp_1912.ovpn', 'vpngate_nagoya2.ovpn')">
+          <span class="btn-icon">🇯🇵</span>
+          <span class="btn-country" data-ja="名古屋" data-vi="Nagoya" data-en="Nagoya">名古屋</span>
+          <span class="btn-label" data-ja="サーバー2" data-vi="Máy chủ 2" data-en="Server 2">サーバー2</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_90.149.132.107_udp_1273.ovpn', 'vpngate_osaka1.ovpn')">
+          <span class="btn-icon">🇯🇵</span>
+          <span class="btn-country" data-ja="大阪" data-vi="Osaka" data-en="Osaka">大阪</span>
+          <span class="btn-label" data-ja="サーバー1" data-vi="Máy chủ 1" data-en="Server 1">サーバー1</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 韓国地域 -->
+    <div class="region-group">
+      <div class="region-title" data-ja="韓国" data-vi="Hàn Quốc" data-en="South Korea">韓国</div>
+      <div class="button-grid">
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_1.244.119.231_udp_1195.ovpn', 'vpngate_chuncheon.ovpn')">
+          <span class="btn-icon">🇰🇷</span>
+          <span class="btn-country" data-ja="春川" data-vi="Chuncheon" data-en="Chuncheon">春川</span>
+          <span class="btn-label" data-ja="サーバー" data-vi="Máy chủ" data-en="Server">サーバー</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_14.53.15.183_udp_1195.ovpn', 'vpngate_pocheon.ovpn')">
+          <span class="btn-icon">🇰🇷</span>
+          <span class="btn-country" data-ja="抱川" data-vi="Pocheon" data-en="Pocheon">抱川</span>
+          <span class="btn-label" data-ja="サーバー" data-vi="Máy chủ" data-en="Server">サーバー</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_119.195.62.38_udp_1248.ovpn', 'vpngate_geoje.ovpn')">
+          <span class="btn-icon">🇰🇷</span>
+          <span class="btn-country" data-ja="巨済" data-vi="Geoje" data-en="Geoje">巨済</span>
+          <span class="btn-label" data-ja="サーバー" data-vi="Máy chủ" data-en="Server">サーバー</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_112.170.151.111_udp_1195.ovpn', 'vpngate_anyang.ovpn')">
+          <span class="btn-icon">🇰🇷</span>
+          <span class="btn-country" data-ja="安養" data-vi="Anyang" data-en="Anyang">安養</span>
+          <span class="btn-label" data-ja="サーバー" data-vi="Máy chủ" data-en="Server">サーバー</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- その他 -->
+    <div class="region-group">
+      <div class="region-title" data-ja="その他" data-vi="Khác" data-en="Other">その他</div>
+      <div class="button-grid">
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_124.123.190.216_udp_15147.ovpn', 'vpngate_telangana.ovpn')">
+          <span class="btn-icon">🇮🇳</span>
+          <span class="btn-country" data-ja="テランガナ" data-vi="Telangana" data-en="Telangana">テランガナ</span>
+          <span class="btn-label" data-ja="インド" data-vi="Ấn Độ" data-en="India">インド</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_27.74.232.209_udp_1797.ovpn', 'vpngate_hochiminh.ovpn')">
+          <span class="btn-icon">🇻🇳</span>
+          <span class="btn-country" data-ja="ホーチミン" data-vi="Thành phố Hồ Chí Minh" data-en="Ho Chi Minh">ホーチミン</span>
+          <span class="btn-label" data-ja="ベトナム" data-vi="Việt Nam" data-en="Vietnam">ベトナム</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_118.69.102.59_udp_1735.ovpn', 'vpngate_tanphu.ovpn')">
+          <span class="btn-icon">🇻🇳</span>
+          <span class="btn-country" data-ja="タンフー" data-vi="Quận Tân Phú" data-en="Tan Phu">タンフー</span>
+          <span class="btn-label" data-ja="ベトナム" data-vi="Việt Nam" data-en="Vietnam">ベトナム</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_27.130.177.231_udp_1311.ovpn', 'vpngate_bangkok.ovpn')">
+          <span class="btn-icon">🇹🇭</span>
+          <span class="btn-country" data-ja="バンコク" data-vi="Bangkok" data-en="Bangkok">バンコク</span>
+          <span class="btn-label" data-ja="タイ" data-vi="Thái Lan" data-en="Thailand">タイ</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_87.225.27.135_udp_1569.ovpn', 'vpngate_khabarovsk.ovpn')">
+          <span class="btn-icon">🇷🇺</span>
+          <span class="btn-country" data-ja="ハバロフスク" data-vi="Khabarovsk" data-en="Khabarovsk">ハバロフスク</span>
+          <span class="btn-label" data-ja="ロシア" data-vi="Nga" data-en="Russia">ロシア</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_109.126.58.213_udp_1040.ovpn', 'vpngate_fokino.ovpn')">
+          <span class="btn-icon">🇷🇺</span>
+          <span class="btn-country" data-ja="フォキーノ" data-vi="Fokino" data-en="Fokino">フォキーノ</span>
+          <span class="btn-label" data-ja="ロシア" data-vi="Nga" data-en="Russia">ロシア</span>
+        </button>
+        <button class="download-btn" onclick="downloadFile('https://github.com/SaturnGroup02/SaturnStudio_VPN/blob/main/vpngate_123.253.210.241_udp_1788.ovpn', 'vpngate_auckland.ovpn')">
+          <span class="btn-icon">🇳🇿</span>
+          <span class="btn-country" data-ja="オークランド" data-vi="Auckland" data-en="Auckland">オークランド</span>
+          <span class="btn-label" data-ja="ニュージーランド" data-vi="New Zealand" data-en="New Zealand">ニュージーランド</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p><span data-ja="サタンVPN | 世界中のVPNサーバーからお選びください" data-vi="Satan VPN | Chọn từ các máy chủ VPN trên thế giới" data-en="Satan VPN | Choose from VPN servers worldwide">サタンVPN | 世界中のVPNサーバーからお選びください</span></p>
+    </div>
+  </div>
+
+  <script>
+    let currentLanguage = 'ja';
+
+    function switchLanguage(lang) {
+      currentLanguage = lang;
+      
+      // 言語ボタンのアクティブ状態を更新
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // すべてのテキストを更新
+      document.querySelectorAll('[data-ja]').forEach(element => {
+        if (lang === 'ja') {
+          element.textContent = element.getAttribute('data-ja');
+        } else if (lang === 'vi') {
+          element.textContent = element.getAttribute('data-vi');
+        } else if (lang === 'en') {
+          element.textContent = element.getAttribute('data-en');
+        }
+      });
+
+      // localStorage に言語設定を保存
+      localStorage.setItem('selectedLanguage', lang);
+    }
+
+    // ページ読み込み時に保存された言語を復元
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedLanguage = localStorage.getItem('selectedLanguage') || 'ja';
+      const langBtn = document.querySelector(`[onclick="switchLanguage('${savedLanguage}')"]`);
+      if (langBtn) {
+        langBtn.click();
+      }
+    });
+
+    function downloadFile(url, filename) {
+      // raw.githubusercontent.comからの直接ダウンロード
+      const rawUrl = url.replace(
+        'https://github.com/',
+        'https://raw.githubusercontent.com/'
+      ).replace('/blob/main/', '/main/');
+      
+      const link = document.createElement('a');
+      link.href = rawUrl;
+      link.download = filename || rawUrl.split('/').pop();
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
